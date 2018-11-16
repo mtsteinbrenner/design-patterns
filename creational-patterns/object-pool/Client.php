@@ -6,13 +6,13 @@ use Exception;
 
 class Client
 {
-	private $name;
-	private $connectionPool;
-	private $connection = null;
+	protected $id;
+	protected $connectionPool;
+	protected $connection = null;
 
-	public function __construct(string $name, ConnectionPool $connectionPool)
+	public function __construct(int $id, ConnectionPool $connectionPool)
 	{
-		$this->name = $name;
+		$this->id = $id;
 		$this->connectionPool = $connectionPool;
 	}
 
@@ -21,19 +21,19 @@ class Client
 		try {
 			$this->connection = $this->connectionPool->assignConnection();
 		} catch (Exception $e) {
-			echo 'Client ' . $this->name . ': ' . $e->getMessage() . PHP_EOL;
+			echo "Client $this->id: " . $e->getMessage() . PHP_EOL;
 
 			return null;
 		}
 
-		echo 'Client ' . $this->name . ': Connection ' . $this->connection->getIndex() . ' assigned.' . PHP_EOL;
+		echo "Client $this->id: Connection " . $this->connection->getId() .' opened.' . PHP_EOL;
 
 		return $this->connection;
 	}
 
 	public function showResults()
 	{
-		echo 'Client ' . $this->name . ': ' . ($this->getConnection() ? $this->getConnection()->getResults() : 'No connection!');
+		echo "Client $this->id: " . ($this->getConnection() ? $this->getConnection()->getResults() : 'No connection!');
 	}
 
 	public function getConnection(): ?Connection
@@ -43,7 +43,7 @@ class Client
 
 	public function closeConnection(): self
 	{
-		echo 'Client ' . $this->name . ': Connection ' . $this->connection->getIndex() . ' released.' . PHP_EOL;
+		echo "Client $this->id: Connection " . $this->connection->getId() . ' released.' . PHP_EOL;
 
 		$this->connectionPool->releaseConnection($this->connection);
 		$this->connection = null;

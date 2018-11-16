@@ -4,17 +4,17 @@ namespace console\models\designpatterns\creationalpatterns\objectpool;
 
 class Connection
 {
-	private $index;
-	private $results = [];
+	protected $id;
+	protected $results = [];
 
-	public function __construct(int $index)
+	public function __construct(int $id)
 	{
-		$this->index = $index;
+		$this->id = $id;
 	}
 
-	public function getIndex(): int
+	public function getId(): int
 	{
-		return $this->index;
+		return $this->id;
 	}
 
 	public function doOperation(string $operation): self
@@ -30,12 +30,8 @@ class Connection
 		$this->results = [];
 	}
 
-	public function getResults(string $key = null): ?string
+	public function getResults(): ?string
 	{
-		if ($key) {
-			return isset($this->results[$key]) ? $this->results[$key] : null;
-		}
-
 		$resultList = null;
 
 		foreach ($this->results as $result) {

@@ -6,41 +6,38 @@ use Exception;
 
 class ConnectionPool
 {
-	private $connectionIndices = [];
-	private $availableConnections = [];
-	private $unavailableConnections = [];
+	protected $connectionIndex = 1;
+	protected $poolLimit;
+	protected $connections = [];
 
-	public function __construct(int $maxNumberOfConnections = 8)
+	// limit of -1 is unlimited pool
+	public function __construct(int $maxNumberOfConnections = -1)
 	{
-		for ($i = 0; $i < $maxNumberOfConnections; $i++) {
-			$this->connectionIndices[$i] = $maxNumberOfConnections - $i;
-		}
+		$this->poolLimit = $maxNumberOfConnections;
 	}
 
 	public function assignConnection(): Connection
 	{
-		if (empty($this->availableConnections)) {
-			if (empty($this->connectionIndices)) {
-				throw new Exception('Maximum number of available connections open, please try again later.');
+		if (empty($this->connections)) {
+			if ($this->connectionIndex <= $this->poolLimit || $this->poolLimit === -1) {
+				$this->addNewConnection();
 			} else {
-				$connection = new Connection(array_pop($this->connectionIndices));
+				throw new Exception('Maximum number of available connections open, please try again later.');
 			}
-		} else {
-			$connection = array_pop($this->availableConnections);
 		}
 
-		$this->unavailableConnections[$connection->getIndex()] = $connection;
-
-		return $connection;
+		return array_pop($this->connections);
 	}
 
 	public function releaseConnection(Connection $connection): void
 	{
-		if (isset($this->unavailableConnections[$connection->getIndex()])) {
-			$connection->reset();
+		$connection->reset();
+		$this->connections[] = $connection;
+	}
 
-			unset($this->unavailableConnections[$connection->getIndex()]);
-			$this->availableConnections[$connection->getIndex()] = $connection;
-		}
+	private function addNewConnection()
+	{
+		$this->connections[] = new Connection($this->connectionIndex);
+		$this->connectionIndex++;
 	}
 }
