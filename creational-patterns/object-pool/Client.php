@@ -33,7 +33,7 @@ class Client
 
 	public function showResults()
 	{
-		echo 'Client ' . $this->name . ': ' . $this->getConnection()->getResults();
+		echo 'Client ' . $this->name . ': ' . ($this->getConnection() ? $this->getConnection()->getResults() : 'No connection!');
 	}
 
 	public function getConnection(): ?Connection
