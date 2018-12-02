@@ -9,14 +9,17 @@ class SortFilterDecorator extends AbstractFilterDecorator
 		$this->filter->filter();
 	}
 
-	public function getResults(): array
+	public function showResults(): array
 	{
-		return $this->filter->getResults();
+		return $this->filter->showResults();
 	}
 
 	public function sort(): void
 	{
-		sort($this->getResults());
-		$this->filter->updateResults($this->getResults());
+		$results = $this->showResults();
+
+		sort($results);
+
+		$this->filter->updateResults($results);
 	}
 }

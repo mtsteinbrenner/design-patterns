@@ -6,10 +6,10 @@ class FilterByFirstLetterDecorator extends AbstractFilterDecorator
 {
 	public function filter(): void
 	{
-		$results = $this->filter->getResults();
+		$results = $this->filter->showResults();
 
 		foreach ($results as $key => $result) {
-			if ($result[0] === $this->term) {
+			if ($result[0] !== $this->term) {
 				unset($results[$key]);
 			}
 		}

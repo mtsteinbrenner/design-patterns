@@ -7,7 +7,7 @@ abstract class AbstractFilterDecorator implements FilterInterface
 	protected $filter;
 	protected $term;
 
-	public function __construct(FilterInterface $filter, $term)
+	public function __construct(FilterInterface $filter, $term = null)
 	{
 		$this->filter = $filter;
 		$this->term = $term;
@@ -15,9 +15,9 @@ abstract class AbstractFilterDecorator implements FilterInterface
 
 	abstract public function filter(): void;
 
-	public function getResults(): array
+	public function showResults(): array
 	{
-		return $this->filter->getResults();
+		return $this->filter->showResults();
 	}
 
 	public function updateResults(array $results): void
@@ -25,7 +25,6 @@ abstract class AbstractFilterDecorator implements FilterInterface
 		$this->filter->updateResults($results);
 	}
 
-	// checks if a method is present
 	public function hasMethod(string $method): bool
 	{
 		if (method_exists($this, $method)) {
@@ -39,7 +38,6 @@ abstract class AbstractFilterDecorator implements FilterInterface
 		return false;
 	}
 
-	// forwards the method to the next nested object
 	public function __call($method, $args)
 	{
 		return call_user_func_array(

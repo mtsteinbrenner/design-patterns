@@ -16,7 +16,7 @@ class Filter implements FilterInterface
 		// filter without a filter doesn't do much
 	}
 
-	public function getResults(): array
+	public function showResults(): array
 	{
 		return $this->result;
 	}
