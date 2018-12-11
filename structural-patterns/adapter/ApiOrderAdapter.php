@@ -30,8 +30,8 @@ class ApiOrderAdapter implements OrderInterface
 	{
 		$accessories = [];
 
-		foreach ($this->apiResult->getAccessories() as $accessory) {
-			$accessories[] = Accessory::findOne($accessory->id);
+		foreach ($this->apiResult->getAccessoryIds() as $accessoryId) {
+			$accessories[] = Accessory::findOne($accessoryId);
 		}
 
 		return $accessories;

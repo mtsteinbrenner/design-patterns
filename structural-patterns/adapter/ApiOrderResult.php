@@ -8,7 +8,22 @@ class ApiOrderResult
 	protected $price;
 	protected $tariff_id;
 	protected $article_id;
-	protected $accessories;
+	protected $accessory_ids;
+
+	public function __construct(
+		int $id,
+		float $price,
+		int $tariff_id,
+		int $article_id,
+		array $accessory_ids = []
+	)
+	{
+		$this->id = $id;
+		$this->price = $price;
+		$this->tariff_id = $tariff_id;
+		$this->article_id = $article_id;
+		$this->accessory_ids = $accessory_ids;
+	}
 
 	public function getId(): int
 	{
@@ -30,8 +45,8 @@ class ApiOrderResult
 		return $this->article_id;
 	}
 
-	public function getAccessories(): array
+	public function getAccessoryIds(): array
 	{
-		return $this->accessories;
+		return $this->accessory_ids;
 	}
 }
